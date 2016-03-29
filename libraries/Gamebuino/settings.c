@@ -20,6 +20,8 @@
 #ifndef SETTINGS_C
 #define	SETTINGS_C
 
+#define MY_GAMEBUINO_1 1
+
 #define NOROT 0
 #define ROTCCW 1
 #define ROT180 2
@@ -35,8 +37,8 @@
 #define EXTENDED_NOTE_RANGE 1 //allows the use of notes above A 5... please avoid that they sound really bad
 
 //not really useful
-#define ENABLE_BATTERY 1 //disable battery monitoring
-#define ENABLE_BACKLIGHT 1 //disable automatic back-light
+#define ENABLE_BATTERY 0 //disable battery monitoring
+#define ENABLE_BACKLIGHT 0 //disable automatic back-light
 
 //IT'S STRONGLY ADVISED TO LEAVE THE FOLLOWING SETTINGS ALONE
 
@@ -130,10 +132,17 @@
 #define BTN_B           5
 #define BTN_C           6
 //buttons pins
+#if 0
 #define BTN_UP_PIN      9
 #define BTN_RIGHT_PIN   7
 #define BTN_DOWN_PIN    6
 #define BTN_LEFT_PIN    8
+#endif
+#define BTN_UP_PIN      7
+#define BTN_RIGHT_PIN   6
+#define BTN_DOWN_PIN    8
+#define BTN_LEFT_PIN    9
+
 #define BTN_A_PIN       4
 #define BTN_B_PIN       2
 #define BTN_C_PIN       A3
