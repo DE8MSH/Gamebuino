@@ -214,6 +214,34 @@ void Display::begin(int8_t SCLK, int8_t DIN, int8_t DC, int8_t CS, int8_t RST) {
     command(0xa6);
     command(0xaf);
 
+    uint8_t col, maxcol, p;
+    command(0x21);
+    command(0x00);
+    command(127);
+ 
+    for (p = 0; p < 8; p++) {
+        command(0x22);
+        command(p);
+        command(p + 1);
+ 
+        // start at the beginning of the row
+        col = 0;
+        maxcol = 128 - 1; // WIDH
+
+        command(0x21);
+        command(0x00);
+        command(127);
+ 
+        digitalWrite(dc, HIGH);
+        if (cs > 0)
+            digitalWrite(cs, LOW);
+        for (; col <= maxcol+4; col++) {
+            SPI.transfer(0x00);
+        }
+        if (cs > 0)
+            digitalWrite(cs, HIGH);
+    }
+
     if (cs > 0)
         digitalWrite(cs, HIGH);
     #endif
