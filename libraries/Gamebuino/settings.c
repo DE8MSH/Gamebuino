@@ -20,8 +20,6 @@
 #ifndef SETTINGS_C
 #define	SETTINGS_C
 
-#define MY_GAMEBUINO_1 1
-
 #define NOROT 0
 #define ROTCCW 1
 #define ROT180 2
