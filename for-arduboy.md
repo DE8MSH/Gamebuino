@@ -10,12 +10,8 @@ I don't test this library on REAL arduboy ( because I don't have one. )
 
 copy library to Arduino's library directory.
 
+This library define ARDUBOY ( declare #define ARDUBOY in setting.c ), this flag change the logic from Gamebuino to Arduboy.
 
-define ARDUBOY on your ino file.
-
-```
-#define ARDUBOY
-```
 
 # 重要！
 
@@ -27,4 +23,4 @@ define ARDUBOY on your ino file.
 # 使い方
 
 - librariesの中身をArduinoのライブラリディレクトリにコピーします。
-- inoファイルのどこかでARDUBOYをdefineしてください。
+- ライブラリの中でARDUBOYと宣言していて、これによりGamebuinoとArduboyのロジックを切り分けています

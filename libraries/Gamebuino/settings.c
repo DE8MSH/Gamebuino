@@ -20,6 +20,9 @@
 #ifndef SETTINGS_C
 #define	SETTINGS_C
 
+// ADRUBOY mode!
+#define ARDUBOY
+
 #define NOROT 0
 #define ROTCCW 1
 #define ROT180 2
