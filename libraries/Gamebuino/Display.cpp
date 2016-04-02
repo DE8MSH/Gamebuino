@@ -105,12 +105,12 @@ void Display::begin(int8_t SCLK, int8_t DIN, int8_t DC, int8_t CS, int8_t RST) {
     dcpinmask = digitalPinToBitMask(dc);
 
     // get into the EXTENDED mode!
-    #if 0
+    #ifdef GAMEBUINO_ORGINAL
     command(PCD8544_FUNCTIONSET | PCD8544_EXTENDEDINSTRUCTION);
     #endif
 
     // LCD bias select (4 is optimal?)
-    #if 0
+    #ifdef GAMEBUINO_ORGINAL
     command(PCD8544_SETBIAS | 0x4);
     #endif
 
@@ -118,16 +118,18 @@ void Display::begin(int8_t SCLK, int8_t DIN, int8_t DC, int8_t CS, int8_t RST) {
     if (contrast > 0x7f)
         contrast = 0x7f;
 
+    #ifdef GAMEBUINO_ORGINAL
     command(PCD8544_SETVOP | contrast); // Experimentally determined
+    #endif
 
 
     // normal mode
-    #if 0
+    #ifdef GAMEBUINO_ORGINAL
     command(PCD8544_FUNCTIONSET);
     #endif
 
     // Set display to Normal
-    #if 0
+    #ifdef GAMEBUINO_ORGINAL
     command(PCD8544_DISPLAYCONTROL | PCD8544_DISPLAYNORMAL);
     #endif
 
@@ -281,7 +283,7 @@ void Display::setContrast(uint8_t val) {
     /*if (contrast > 0x7f) {
         contrast = 0x7f;
     }*/
-    #if 0
+    #ifdef GAMEBUINO_ORGINAL
     command(PCD8544_FUNCTIONSET | PCD8544_EXTENDEDINSTRUCTION);
     command(PCD8544_SETVOP | contrast);
     command(PCD8544_FUNCTIONSET);
@@ -315,7 +317,7 @@ void Display::update(void) {
     #endif
 
     for (p = 0; p < 6; p++) {
-        #if 0
+        #ifdef GAMEBUINO_ORGINAL
         command(PCD8544_SETYADDR | p);
         #endif
 
@@ -333,7 +335,7 @@ void Display::update(void) {
         col = 0;
         maxcol = LCDWIDTH_NOROT - 1;
 
-        #if 0
+        #ifdef GAMEBUINO_ORGINAL
         command(PCD8544_SETXADDR | col);
         #endif
 
@@ -360,7 +362,7 @@ void Display::update(void) {
 
     }
 
-    #if 0
+    #ifdef GAMEBUINO_ORGINAL
     command(PCD8544_SETYADDR); // no idea why this is necessary but it is to finish the last byte?
     #endif
 

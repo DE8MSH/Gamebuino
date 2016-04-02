@@ -130,7 +130,7 @@
 #define BTN_B           5
 #define BTN_C           6
 //buttons pins
-#if 0
+#if GAMEBUINO_ORGINAL
 #define BTN_UP_PIN      9
 #define BTN_RIGHT_PIN   7
 #define BTN_DOWN_PIN    6
