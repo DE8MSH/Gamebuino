@@ -104,33 +104,83 @@ void Display::begin(int8_t SCLK, int8_t DIN, int8_t DC, int8_t CS, int8_t RST) {
     dcport = portOutputRegister(digitalPinToPort(dc));
     dcpinmask = digitalPinToBitMask(dc);
 
-    // get into the EXTENDED mode!
     #ifdef GAMEBUINO_ORGINAL
+    // get into the EXTENDED mode!
     command(PCD8544_FUNCTIONSET | PCD8544_EXTENDEDINSTRUCTION);
-    #endif
 
     // LCD bias select (4 is optimal?)
-    #ifdef GAMEBUINO_ORGINAL
     command(PCD8544_SETBIAS | 0x4);
-    #endif
 
     // set VOP
     if (contrast > 0x7f)
         contrast = 0x7f;
 
-    #ifdef GAMEBUINO_ORGINAL
     command(PCD8544_SETVOP | contrast); // Experimentally determined
-    #endif
-
 
     // normal mode
-    #ifdef GAMEBUINO_ORGINAL
     command(PCD8544_FUNCTIONSET);
-    #endif
 
     // Set display to Normal
-    #ifdef GAMEBUINO_ORGINAL
     command(PCD8544_DISPLAYCONTROL | PCD8544_DISPLAYNORMAL);
+    #endif
+
+    #ifdef ARDUBOY
+    // SSD1306
+    command(0xae);
+    command(0xd5);
+    command(0x80);
+    command(0xa8);
+    command(0x3f);
+    command(0xd3);
+    command(0x00);
+    command(0x40);
+    command(0x8d);
+    command(0x14);
+    command(0xa1);
+    command(0xc8);
+    command(0xda);
+    command(0x12);
+    command(0x81);
+    command(0xcf);
+    command(0xd9);
+    command(0xf1);
+    command(0xdb);
+    command(0x40);
+    command(0xa4);
+    command(0xa6);
+    command(0xaf);
+
+    uint8_t col, maxcol, p;
+    command(0x21);
+    command(0x00);
+    command(127);
+ 
+    for (p = 0; p < 8; p++) {
+        command(0x22);
+        command(p);
+        command(p + 1);
+ 
+        // start at the beginning of the row
+        col = 0;
+        maxcol = 128 - 1; // WIDH
+
+        command(0x21);
+        command(0x00);
+        command(127);
+ 
+        digitalWrite(dc, HIGH);
+        if (cs > 0)
+            digitalWrite(cs, LOW);
+        for (; col <= maxcol+4; col++) {
+            SPI.transfer(0x00);
+        }
+        if (cs > 0)
+            digitalWrite(cs, HIGH);
+    }
+
+    if (cs > 0)
+        digitalWrite(cs, HIGH);
+
     #endif
 
     #ifdef MY_GAMEBUINO_1
@@ -192,6 +242,7 @@ void Display::begin(int8_t SCLK, int8_t DIN, int8_t DC, int8_t CS, int8_t RST) {
     #endif
 
     #ifdef MY_GAMEBUINO_2
+    // SSD1306
     command(0xae);
     command(0xd5);
     command(0x80);

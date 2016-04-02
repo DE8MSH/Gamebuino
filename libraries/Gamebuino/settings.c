@@ -68,11 +68,20 @@
 #define KEYBOARD_H 8
 
 //screen
+#ifdef ARDUBOY
+#define SCR_CLK 15
+#define SCR_DIN 16
+#define SCR_DC  4
+#define SCR_CS  12
+#define SCR_RST 6
+#elif
+// normal gamebuino and my variants
 #define SCR_CLK 13
 #define SCR_DIN 11
 #define SCR_DC  A2
 #define SCR_CS  A1
 #define SCR_RST A0
+#endif
 
 //sound
 #define VOLUME_GLOBAL_MAX 1
@@ -131,11 +140,30 @@
 #define BTN_C           6
 //buttons pins
 #if GAMEBUINO_ORGINAL
+
 #define BTN_UP_PIN      9
 #define BTN_RIGHT_PIN   7
 #define BTN_DOWN_PIN    6
 #define BTN_LEFT_PIN    8
-#endif
+
+#define BTN_A_PIN       4
+#define BTN_B_PIN       2
+#define BTN_C_PIN       A3
+
+#elif defined(ARDUBOY)
+
+#define BTN_UP_PIN      A0
+#define BTN_RIGHT_PIN   A1
+#define BTN_DOWN_PIN    A3
+#define BTN_LEFT_PIN    A2
+
+#define BTN_A_PIN       7
+#define BTN_B_PIN       8
+// BUTTOC is not connect!
+#define BTN_C_PIN       9
+
+#elif
+
 #define BTN_UP_PIN      7
 #define BTN_RIGHT_PIN   6
 #define BTN_DOWN_PIN    8
@@ -144,5 +172,8 @@
 #define BTN_A_PIN       4
 #define BTN_B_PIN       2
 #define BTN_C_PIN       A3
+
+#endif
+
 
 #endif /* SETTINGS_C */
