@@ -163,7 +163,7 @@
 
 #define BTN_A_PIN       7
 #define BTN_B_PIN       8
-// BUTTOC is not connect!
+// BUTTON C is not connect!
 #define BTN_C_PIN       9
 
 #else
