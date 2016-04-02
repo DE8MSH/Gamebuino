@@ -104,6 +104,7 @@ void Display::begin(int8_t SCLK, int8_t DIN, int8_t DC, int8_t CS, int8_t RST) {
     dcport = portOutputRegister(digitalPinToPort(dc));
     dcpinmask = digitalPinToBitMask(dc);
 
+    #ifdef GAMEBUINO_ORGINAL
     // get into the EXTENDED mode!
     command(PCD8544_FUNCTIONSET | PCD8544_EXTENDEDINSTRUCTION);
 
@@ -116,12 +117,128 @@ void Display::begin(int8_t SCLK, int8_t DIN, int8_t DC, int8_t CS, int8_t RST) {
 
     command(PCD8544_SETVOP | contrast); // Experimentally determined
 
-
     // normal mode
     command(PCD8544_FUNCTIONSET);
 
     // Set display to Normal
     command(PCD8544_DISPLAYCONTROL | PCD8544_DISPLAYNORMAL);
+    #endif
+
+    #ifdef MY_GAMEBUINO_1
+    // my gamebuino1
+    command(0xe2);  // soft reset
+    command(0x40);  // set dosplay start line to 0
+    command(0xa0);  // ADC set to reverse
+    command(0xc8);  // common output mode
+    command(0xa6);  // display normal, bit val 0: LCD pixcel off.
+    command(0xa2);  // LCD bias , duty 0xa2 | 0xa3
+    command(0x2f);  // all power control circuit on
+    command(0xf8);  // set booster ratio to
+    command(0x00);  // 4X
+    command(0x23);  // set V0 voltage resistor ration to large
+    command(0x81);  //set contrast
+    command(0x30); // contrast value 0x27
+    command(0xac); // indicator
+
+    command(0xa1); // set seg direction 0xa1, 0xa0
+    command(0xc0); // set com direction 0xc8, 0xc0
+
+    command(0x00); // disable
+    command(0xaf); // display on
+
+
+    command(0xa1); // set seg direction 0xa1, 0xa0
+    command(0xc0); // set com direction 0xc8, 0xc0
+
+    command(0x00); // disable
+    command(0xaf); // display on
+ 
+    delay(100);
+    command(0xa5); // set all pixcel on
+    delay(100);
+    delay(100);
+    command(0xa4); // set all pixel off
+
+    uint8_t col, maxcol, p;
+
+    for (p = 0; p < 8; p++) {
+
+        command(0xb0 | p);
+        // start at the beginning of the row
+        col = 0;
+        maxcol = 128 - 1; // WIDH
+
+        command((col & 0x0f) | 0x10);
+        command((col >> 4)&0x0f);
+        digitalWrite(dc, HIGH);
+        if (cs > 0)
+            digitalWrite(cs, LOW);
+        for (; col <= maxcol+4; col++) {
+            SPI.transfer(0x00);
+        }
+        if (cs > 0)
+            digitalWrite(cs, HIGH);
+    }
+
+    #endif
+
+    #ifdef ARDUBOY || MY_GAMEBUINO_2
+    // SSD1306
+    command(0xae);
+    command(0xd5);
+    command(0x80);
+    command(0xa8);
+    command(0x3f);
+    command(0xd3);
+    command(0x00);
+    command(0x40);
+    command(0x8d);
+    command(0x14);
+    command(0xa1);
+    command(0xc8);
+    command(0xda);
+    command(0x12);
+    command(0x81);
+    command(0xcf);
+    command(0xd9);
+    command(0xf1);
+    command(0xdb);
+    command(0x40);
+    command(0xa4);
+    command(0xa6);
+    command(0xaf);
+
+    uint8_t col, maxcol, p;
+    command(0x21);
+    command(0x00);
+    command(127);
+ 
+    for (p = 0; p < 8; p++) {
+        command(0x22);
+        command(p);
+        command(p + 1);
+ 
+        // start at the beginning of the row
+        col = 0;
+        maxcol = 128 - 1; // WIDH
+
+        command(0x21);
+        command(0x00);
+        command(127);
+ 
+        digitalWrite(dc, HIGH);
+        if (cs > 0)
+            digitalWrite(cs, LOW);
+        for (; col <= maxcol+4; col++) {
+            SPI.transfer(0x00);
+        }
+        if (cs > 0)
+            digitalWrite(cs, HIGH);
+    }
+
+    if (cs > 0)
+        digitalWrite(cs, HIGH);
+    #endif
 
     // initial display line
     // set page address
@@ -158,9 +275,17 @@ void Display::setContrast(uint8_t val) {
     /*if (contrast > 0x7f) {
         contrast = 0x7f;
     }*/
+    #ifdef GAMEBUINO_ORGINAL
     command(PCD8544_FUNCTIONSET | PCD8544_EXTENDEDINSTRUCTION);
     command(PCD8544_SETVOP | contrast);
     command(PCD8544_FUNCTIONSET);
+    #endif
+
+    #ifdef MY_GAMEBUINO_1
+    //my gamebuino1
+    command(0x81); // SetElectronic Volume
+    command(contrast); // SetElectronic Volume
+    #endif
 
 }
 
@@ -177,15 +302,45 @@ void Display::update(void) {
 	frameCount ++;
     uint8_t col, maxcol, p;
 
-    for (p = 0; p < 6; p++) {
+    #ifdef ARDUBOY || MY_GAMEBUINO_2
+    command(0x21);
+    command(0x00);
+    command(127);
+    #endif
 
+    for (p = 0; p < 6; p++) {
+        #ifdef GAMEBUINO_ORGINAL
         command(PCD8544_SETYADDR | p);
+        #endif
+
+        #ifdef MY_GAMEBUINO_1
+        command(0xb0 | p);
+        #endif
+
+        #ifdef ARDUBOY || MY_GAMEBUINO_2
+        command(0x22);
+        command(p);
+        command(p + 1);
+        #endif
 
         // start at the beginning of the row
         col = 0;
         maxcol = LCDWIDTH_NOROT - 1;
 
+        #ifdef GAMEBUINO_ORGINAL
         command(PCD8544_SETXADDR | col);
+        #endif
+
+        #ifdef MY_GAMEBUINO_1
+        command((col & 0x0f) | 0x10);
+        command(((col >> 4) + 4)&0x0f);
+        #endif
+
+        #ifdef ARDUBOY || MY_GAMEBUINO_2
+        command(0x21);
+        command(0x00);
+        command(127);
+        #endif
 
         digitalWrite(dc, HIGH);
         if (cs > 0)
@@ -199,7 +354,14 @@ void Display::update(void) {
 
     }
 
+    #ifdef GAMEBUINO_ORGINAL
     command(PCD8544_SETYADDR); // no idea why this is necessary but it is to finish the last byte?
+    #endif
+
+    #ifdef MY_GAMEBUINO_1
+    command(0x10);  // column LSB 0
+    command(0x00);  // column MSB 0
+    #endif
 }
 
 void Display::setColor(int8_t c){

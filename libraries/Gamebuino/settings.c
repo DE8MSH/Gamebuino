@@ -26,8 +26,12 @@
 #define ROTCW 3
 
 //SETTINGS YOU CAN EDIT
-
+#ifdef ARDUBOY
+// sound for arduboy is not support yet
+#define NUM_CHANNELS 0
+#else
 #define NUM_CHANNELS 1 //number of sound channels, between 0 and 4
+#endif
 #define DISPLAY_ROT NOROT //set to NOROT, ROTCCW, ROT180 or ROTCW. Can be used to play in portrait mode.
 #define ENABLE_GUI 1 //enable menu, keyboard, pop-up, volume adjust functions
 #define ENABLE_BITMAPS 1 //will replace bitmaps with rectangles if disabled
@@ -35,8 +39,8 @@
 #define EXTENDED_NOTE_RANGE 1 //allows the use of notes above A 5... please avoid that they sound really bad
 
 //not really useful
-#define ENABLE_BATTERY 1 //disable battery monitoring
-#define ENABLE_BACKLIGHT 1 //disable automatic back-light
+#define ENABLE_BATTERY 0 //disable battery monitoring
+#define ENABLE_BACKLIGHT 0 //disable automatic back-light
 
 //IT'S STRONGLY ADVISED TO LEAVE THE FOLLOWING SETTINGS ALONE
 
@@ -68,11 +72,20 @@
 #define KEYBOARD_H 8
 
 //screen
+#ifdef ARDUBOY
+#define SCR_CLK 15
+#define SCR_DIN 16
+#define SCR_DC  4
+#define SCR_CS  12
+#define SCR_RST 6
+#else
+// normal gamebuino and my variants
 #define SCR_CLK 13
 #define SCR_DIN 11
 #define SCR_DC  A2
 #define SCR_CS  A1
 #define SCR_RST A0
+#endif
 
 //sound
 #define VOLUME_GLOBAL_MAX 1
@@ -130,12 +143,41 @@
 #define BTN_B           5
 #define BTN_C           6
 //buttons pins
+#if GAMEBUINO_ORGINAL
+
 #define BTN_UP_PIN      9
 #define BTN_RIGHT_PIN   7
 #define BTN_DOWN_PIN    6
 #define BTN_LEFT_PIN    8
+
 #define BTN_A_PIN       4
 #define BTN_B_PIN       2
 #define BTN_C_PIN       A3
+
+#elif defined(ARDUBOY)
+
+#define BTN_UP_PIN      A0
+#define BTN_RIGHT_PIN   A1
+#define BTN_DOWN_PIN    A3
+#define BTN_LEFT_PIN    A2
+
+#define BTN_A_PIN       7
+#define BTN_B_PIN       8
+// BUTTON C is not connect!
+#define BTN_C_PIN       9
+
+#else
+
+#define BTN_UP_PIN      7
+#define BTN_RIGHT_PIN   6
+#define BTN_DOWN_PIN    8
+#define BTN_LEFT_PIN    9
+
+#define BTN_A_PIN       4
+#define BTN_B_PIN       2
+#define BTN_C_PIN       A3
+
+#endif
+
 
 #endif /* SETTINGS_C */
