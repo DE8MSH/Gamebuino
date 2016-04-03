@@ -182,7 +182,7 @@ void Display::begin(int8_t SCLK, int8_t DIN, int8_t DC, int8_t CS, int8_t RST) {
 
     #endif
 
-    #ifdef ARDUBOY || MY_GAMEBUINO_2
+    #if defined(ARDUBOY) || defined(MY_GAMEBUINO_2)
     // SSD1306
     command(0xae);
     command(0xd5);
@@ -302,7 +302,7 @@ void Display::update(void) {
 	frameCount ++;
     uint8_t col, maxcol, p;
 
-    #ifdef ARDUBOY || MY_GAMEBUINO_2
+    #if defined(ARDUBOY) || defined(MY_GAMEBUINO_2)
     command(0x21);
     command(0x00);
     command(127);
@@ -317,10 +317,10 @@ void Display::update(void) {
         command(0xb0 | p);
         #endif
 
-        #ifdef ARDUBOY || MY_GAMEBUINO_2
+        #if defined(ARDUBOY) || defined(MY_GAMEBUINO_2)
         command(0x22);
-        command(p);
-        command(p + 1);
+        command(1 + p);
+        command(1 + p + 1);
         #endif
 
         // start at the beginning of the row
@@ -336,9 +336,9 @@ void Display::update(void) {
         command(((col >> 4) + 4)&0x0f);
         #endif
 
-        #ifdef ARDUBOY || MY_GAMEBUINO_2
+        #if defined(ARDUBOY) || defined(MY_GAMEBUINO_2)
         command(0x21);
-        command(0x00);
+        command(16 + 0x00);
         command(127);
         #endif
 
